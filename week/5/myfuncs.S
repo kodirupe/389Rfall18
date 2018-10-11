@@ -3,14 +3,20 @@ section .text         ;declare this section to include executable instructions
 global my_memset      ;export the 'my_memset' symbol to be accessible outside of file
 my_memset:
         push rbp      ;saves the base pointer for the previous function's stack frame
-        mov rbp, rsp  ;moves up the base pointer to the top of the stack to create a new frame
-
-        ;your code goes here!
-
-
+        mov rbp, rsp  ;moves up the base pointer to the top of the stack to create a new frame	
+	cmp rdx,0x0
+	je L1
+	mov rcx, 0x0
+L2:	
+	mov ptr [rdi + rcx], rsi
+	add rcx, 0x1
+	cmp rcx, rdx
+	jl  L2
+	mov ptr[rdi + rcx], 0x0
+L1:	
         leave         ;moves down the stack pointer to the current base pointer,
                       ;and restores our saved base pointer, effectively
-                      ;restoring our previous stack frame
+			;restoring our previous stack frame
         ret           ;jumps to the top value on the stack, hopefully the return address!
 
 
@@ -18,13 +24,18 @@ global my_strncpy     ;export the 'my_strncpy' symbol to be accessible outside o
 my_strncpy:
         push rbp      ;saves the base pointer for the previous function's stack frame
         mov rbp, rsp  ;moves up the base pointer to the top of the stack to create a new frame
-
-
-        ;;;;;;;;;;;;;;;;;;;;;
-        ;your code goes here!
-        ;;;;;;;;;;;;;;;;;;;;;
-
-
+	cmp rdx, 0x0
+	jne L4
+	mov rcx, 0x0
+L3:
+	mov r8b, byte [rsi+rcx]
+	mov [rdi+rcx], r8
+	add rcx, 0x1
+	cmp rcx,rdx
+	jl L3
+	mov ptr[rdi + rcx], 0x0
+L4:
+	
         leave         ;moves down the stack pointer to the current base pointer,
                       ;and restores our saved base pointer, effectively
                       ;restoring our previous stack frame
